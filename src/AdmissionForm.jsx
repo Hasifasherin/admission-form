@@ -1,38 +1,38 @@
 import React, { useState } from 'react';
-import './App.css';
+import './App.css'; // make sure this file exists for styling
 
 const AdmissionForm = () => {
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
     phone: '',
-    course: '',
+    course: ''
   });
 
   const [errors, setErrors] = useState({});
 
-  // Validation function
+  // Function to validate the form fields
   const validate = () => {
     const newErrors = {};
 
     if (!formData.fullName.trim()) {
-      newErrors.fullName = 'Full Name is required';
+      newErrors.fullName = 'Full name is required.';
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = 'Email is required.';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
+      newErrors.email = 'Enter a valid email.';
     }
 
     if (!formData.phone.trim()) {
-      newErrors.phone = 'Phone number is required';
+      newErrors.phone = 'Phone number is required.';
     } else if (!/^\d{10}$/.test(formData.phone)) {
-      newErrors.phone = 'Phone number must be 10 digits';
+      newErrors.phone = 'Phone number must be 10 digits.';
     }
 
     if (!formData.course.trim()) {
-      newErrors.course = 'Course selection is required';
+      newErrors.course = 'Please select a course.';
     }
 
     setErrors(newErrors);
@@ -46,9 +46,10 @@ const AdmissionForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     if (validate()) {
       alert('Form submitted successfully!');
-      console.log(formData);
+      console.log('Submitted data:', formData);
       setFormData({
         fullName: '',
         email: '',
@@ -63,6 +64,7 @@ const AdmissionForm = () => {
     <div className="form-container">
       <h2>College Admission Form</h2>
       <form onSubmit={handleSubmit}>
+
         <div>
           <label>Full Name:</label>
           <input
@@ -71,7 +73,7 @@ const AdmissionForm = () => {
             value={formData.fullName}
             onChange={handleChange}
           />
-          {errors.fullName && <span className="error">{errors.fullName}</span>}
+          {errors.fullName && <p className="error">{errors.fullName}</p>}
         </div>
 
         <div>
@@ -82,29 +84,29 @@ const AdmissionForm = () => {
             value={formData.email}
             onChange={handleChange}
           />
-          {errors.email && <span className="error">{errors.email}</span>}
+          {errors.email && <p className="error">{errors.email}</p>}
         </div>
 
         <div>
-          <label>Phone:</label>
+          <label>Phone Number:</label>
           <input
             type="text"
             name="phone"
             value={formData.phone}
             onChange={handleChange}
           />
-          {errors.phone && <span className="error">{errors.phone}</span>}
+          {errors.phone && <p className="error">{errors.phone}</p>}
         </div>
 
         <div>
           <label>Course:</label>
           <select name="course" value={formData.course} onChange={handleChange}>
-            <option value="">-- Select --</option>
+            <option value="">-- Select a Course --</option>
             <option value="BSc">BSc</option>
             <option value="BCA">BCA</option>
             <option value="BA">BA</option>
           </select>
-          {errors.course && <span className="error">{errors.course}</span>}
+          {errors.course && <p className="error">{errors.course}</p>}
         </div>
 
         <button type="submit">Submit</button>
