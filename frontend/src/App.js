@@ -1,6 +1,6 @@
 import React from 'react';
-import './App.css';
 import AdmissionForm from './AdmissionForm';
+import './App.css';
 
 function App() {
   return (

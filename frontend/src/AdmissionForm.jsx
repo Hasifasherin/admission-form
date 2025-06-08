@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import './App.css';
 
 const AdmissionForm = () => {
@@ -10,6 +11,7 @@ const AdmissionForm = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const [success, setSuccess] = useState('');
 
   const validate = () => {
     const newErrors = {};
@@ -26,23 +28,31 @@ const AdmissionForm = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    setSuccess('');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validate()) {
-      alert('🎉 Form submitted successfully!');
-      console.log(formData);
-      setFormData({ fullName: '', email: '', phone: '', course: '' });
-      setErrors({});
+      try {
+        const res = await axios.post('http://localhost:5000/submit-form', formData);
+        console.log(res.data);
+        setSuccess('🎉 Form submitted successfully!');
+        setFormData({ fullName: '', email: '', phone: '', course: '' });
+        setErrors({});
+      } catch (error) {
+        console.error('Submission error:', error);
+        setSuccess('❌ Submission failed. Try again.');
+      }
     }
   };
 
   return (
     <div className="wrapper">
       <h2 className="title">🎓 College Admission Form</h2>
-      <form onSubmit={handleSubmit} className="form-card">
+      {success && <div className="success-msg">{success}</div>}
 
+      <form onSubmit={handleSubmit} className="form-card">
         <label>Full Name</label>
         <input
           type="text"
@@ -50,6 +60,7 @@ const AdmissionForm = () => {
           value={formData.fullName}
           onChange={handleChange}
           className={errors.fullName ? 'input-error' : ''}
+          placeholder="Enter your full name"
         />
         {errors.fullName && <p className="error">{errors.fullName}</p>}
 
@@ -60,6 +71,7 @@ const AdmissionForm = () => {
           value={formData.email}
           onChange={handleChange}
           className={errors.email ? 'input-error' : ''}
+          placeholder="Enter your email"
         />
         {errors.email && <p className="error">{errors.email}</p>}
 
@@ -70,6 +82,7 @@ const AdmissionForm = () => {
           value={formData.phone}
           onChange={handleChange}
           className={errors.phone ? 'input-error' : ''}
+          placeholder="Enter 10-digit phone number"
         />
         {errors.phone && <p className="error">{errors.phone}</p>}
 
@@ -87,7 +100,7 @@ const AdmissionForm = () => {
         </select>
         {errors.course && <p className="error">{errors.course}</p>}
 
-        <button type="submit">Submit Application</button>
+        <button type="submit" className="submit-btn">Submit Application</button>
       </form>
     </div>
   );
